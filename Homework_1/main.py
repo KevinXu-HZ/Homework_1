@@ -35,6 +35,9 @@ async def get_messages():
 
 @app.post("/api/messages", response_model=Message, status_code=201)
 async def create_message(message: MessageCreate):
+    if any (m.text == message.text for m in messages_db):
+        raise HTTPException(status_code=400, detail=f"Message with text \"{message.text}\" already exists")
+    else:
         new_id = max([m.id for m in messages_db], default=0) + 1
         new_message = Message(id=new_id, text=message.text)
         messages_db.append(new_message)

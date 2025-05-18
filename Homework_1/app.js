@@ -34,6 +34,11 @@ fastapiCreateBtn.addEventListener('click', async () => {
             },
             body: JSON.stringify({ text: messageText })
         });
+        if (!response.ok) {
+            const errorData = await response.json();
+            fastapiResponse.textContent = `error: ${response.status} - ${errorData.detail}`;
+            return;
+        }
         const newMessage = await response.json();
         fastapiResponse.textContent = `Message created successfully:\n${JSON.stringify(newMessage, null, 2)}`;
 
